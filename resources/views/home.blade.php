@@ -2,35 +2,49 @@
 
 @section('content')
 
-<section class="bg-linear-to-r from-emerald-800 to-green-600 text-white pt-32 pb-24">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold">
+<section class="pt-28 pb-20 bg-linear-to-r from-primary to-red-900 text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             UKM Paduan Suara Polije
         </h1>
-        <p class="mt-6 text-lg">
+
+        <p class="text-base sm:text-lg md:text-xl opacity-90">
             Harmoni • Kreativitas • Prestasi
         </p>
+
     </div>
 </section>
 
-{{-- Artikel Preview --}}
-<section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-6">
-        <h2 class="text-3xl font-bold mb-10">Artikel Terbaru</h2>
+<section class="py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            @foreach($articles as $article)
-                <div class="bg-white rounded-xl shadow hover:shadow-lg transition">
-                    <img src="{{ asset('storage/'.$article->thumbnail) }}"
-                         class="rounded-t-xl w-full h-64 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg">
-                            {{ $article->title }}
-                        </h3>
-                    </div>
-                </div>
-            @endforeach
+        <h2 class="text-2xl md:text-3xl font-bold mb-12 text-center">
+            Artikel Terbaru
+        </h2>
+
+        <div class="grid
+                    grid-cols-1
+                    sm:grid-cols-2
+                    lg:grid-cols-3
+                    gap-8">
+
+            <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-6">
+                <h3 class="font-semibold text-lg mb-2">Judul Artikel</h3>
+                <p class="text-gray-600 text-sm">
+                    Deskripsi singkat artikel...
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-6">
+                <h3 class="font-semibold text-lg mb-2">Judul Artikel</h3>
+                <p class="text-gray-600 text-sm">
+                    Deskripsi singkat artikel...
+                </p>
+            </div>
+
         </div>
+
     </div>
 </section>
 
