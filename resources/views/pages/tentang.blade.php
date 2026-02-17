@@ -2,57 +2,71 @@
 
 @section('content')
 
-<section class="pt-36 pb-24 bg-gradient-to-r from-emerald-800 to-green-600 text-white text-center">
+{{-- HERO SECTION --}}
+<section class="pt-28 pb-20 bg-gradient-to-r from-blue-950 to-blue-700 text-white text-center">
     <div class="max-w-4xl mx-auto px-6">
         <h1 class="text-4xl md:text-5xl font-bold">
             Tentang UKM PSM Polije
         </h1>
-        <p class="mt-6 text-lg text-gray-100">
+        <p class="mt-5 text-blue-200">
             Harmoni dalam keberagaman, prestasi dalam kebersamaan.
         </p>
     </div>
 </section>
 
-<section class="py-24 bg-white">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+<section class="max-w-6xl mx-auto px-6 lg:px-12 py-20">
 
-        <div>
-            <h2 class="text-3xl font-bold mb-6 text-emerald-700">
-                Sejarah Singkat
-            </h2>
-            <p class="text-gray-600 leading-relaxed text-lg">
-                UKM Paduan Suara Polije merupakan wadah pengembangan bakat
-                mahasiswa dalam bidang seni musik, khususnya paduan suara.
-                Organisasi ini menjadi ruang kreativitas, kebersamaan,
-                dan pembinaan karakter mahasiswa.
-            </p>
-        </div>
-
-        <div class="bg-emerald-100 rounded-2xl h-80 shadow-inner"></div>
-
+    {{-- VISI --}}
+    <div class="mb-20">
+        <h2 class="text-3xl font-bold text-primary mb-6">
+            Visi
+        </h2>
+        <p class="text-lg leading-relaxed text-gray-700 max-w-3xl">
+            Organisasi yang menjadi wadah pengembangan minat dan bakat mahasiswa
+            Politeknik Negeri Jember dalam bidang seni vokal, musikalitas,
+            dan kebudayaan secara profesional dan berprestasi.
+        </p>
     </div>
-</section>
 
-<section class="py-24 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+    {{-- MISI --}}
+    <div>
+        <h2 class="text-3xl font-bold text-primary mb-12">
+            Misi
+        </h2>
 
-        <div class="bg-white p-8 rounded-2xl shadow">
-            <h3 class="text-2xl font-bold mb-4 text-emerald-700">Visi</h3>
-            <p class="text-gray-600">
-                Menjadi UKM seni yang unggul, berprestasi, dan berkarakter.
-            </p>
+        <div class="grid md:grid-cols-2 gap-16">
+
+            <div class="flex items-start gap-6">
+                <span class="text-5xl font-bold text-primary">1</span>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Mengakomodir mahasiswa yang memiliki minat dan bakat dalam bidang seni vokal dan musikal.
+                </p>
+            </div>
+
+            <div class="flex items-start gap-6">
+                <span class="text-5xl font-bold text-primary">2</span>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Mengadakan kegiatan dan pelatihan rutin untuk meningkatkan kualitas vokal anggota.
+                </p>
+            </div>
+
+            <div class="flex items-start gap-6">
+                <span class="text-5xl font-bold text-primary">3</span>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Menjalin kerja sama dengan organisasi seni di dalam maupun luar kampus.
+                </p>
+            </div>
+
+            <div class="flex items-start gap-6">
+                <span class="text-5xl font-bold text-primary">4</span>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Meningkatkan apresiasi seni dan budaya melalui konser serta kompetisi.
+                </p>
+            </div>
+
         </div>
-
-        <div class="bg-white p-8 rounded-2xl shadow">
-            <h3 class="text-2xl font-bold mb-4 text-emerald-700">Misi</h3>
-            <ul class="list-disc pl-5 text-gray-600 space-y-2">
-                <li>Mengembangkan bakat mahasiswa di bidang musik.</li>
-                <li>Meningkatkan solidaritas dan kerja sama tim.</li>
-                <li>Berpartisipasi dalam kompetisi dan event seni.</li>
-            </ul>
-        </div>
-
     </div>
+
 </section>
 
 @endsection

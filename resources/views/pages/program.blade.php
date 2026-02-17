@@ -2,11 +2,9 @@
 
 @section('content')
 
-<section class="pt-36 pb-20 bg-gradient-to-r from-emerald-700 to-green-500 text-white text-center">
+<section class="pt-28 pb-20 bg-gradient-to-r from-blue-950 to-blue-700 text-white text-center">
     <h1 class="text-4xl md:text-5xl font-bold">Program Kerja</h1>
-    <p class="mt-6 text-lg text-gray-100">
-        Rangkaian kegiatan UKM PSM Polije
-    </p>
+    <p class="mt-5 text-blue-200">Rangkaian kegiatan UKM PSM Polije</p>
 </section>
 
 <section class="py-20 bg-white">
@@ -14,36 +12,34 @@
 
         @if($programs->isEmpty())
 
-            <div class="text-center py-24">
-                <div class="text-6xl mb-6">🎼</div>
-                <h2 class="text-2xl font-bold mb-4">
-                    Belum Ada Program Aktif
-                </h2>
-                <p class="text-gray-500">
-                    Program kerja akan segera diumumkan.
-                </p>
-            </div>
+        <div class="text-center py-20">
+            <h2 class="text-xl font-semibold text-blue-900">
+                Program belum tersedia.
+            </h2>
+        </div>
 
         @else
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <div class="grid md:grid-cols-3 gap-10">
 
             @foreach($programs as $program)
-                <div class="bg-gray-50 rounded-2xl shadow hover:shadow-2xl transition transform hover:-translate-y-2 overflow-hidden">
+            <div class="border border-blue-100">
 
-                    <img src="{{ asset('storage/'.$program->image) }}"
-                         class="w-full h-56 object-cover">
+                <img loading="lazy" decoding="async"
+                     src="{{ $program->image ? asset('storage/'.$program->image) : 'https://via.placeholder.com/600x400' }}"
+                     class="w-full h-48 object-cover">
 
-                    <div class="p-6">
-                        <h3 class="font-bold text-lg text-emerald-700">
-                            {{ $program->title }}
-                        </h3>
-                        <p class="text-gray-600 mt-3 text-sm leading-relaxed">
-                            {{ $program->description }}
-                        </p>
-                    </div>
+                <div class="p-6">
+                    <h3 class="font-semibold text-blue-900">
+                        {{ $program->title }}
+                    </h3>
 
+                    <p class="text-gray-600 text-sm mt-3">
+                        {{ Str::limit($program->description, 120) }}
+                    </p>
                 </div>
+
+            </div>
             @endforeach
 
         </div>
