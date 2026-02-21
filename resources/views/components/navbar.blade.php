@@ -20,6 +20,7 @@
                 <a href="/artikel" class="hover:text-primary">Artikel</a>
                 <a href="/program" class="hover:text-primary">Program</a>
                 <a href="/organisasi" class="hover:text-primary">Organisasi</a>
+                <a href="/majalah" class="hover:text-primary">Majalah</a>
             </div>
 
         </div>

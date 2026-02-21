@@ -22,7 +22,6 @@
                     @foreach ($articles as $article)
                         <a href="{{ route('artikel.show', $article->slug) }}"
                             class="relative group overflow-hidden aspect-square">
-
                             <img loading="lazy"
                                 src="{{ $article->thumbnail ? asset('storage/' . $article->thumbnail) : 'https://via.placeholder.com/600' }}"
                                 class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
