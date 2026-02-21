@@ -48,6 +48,10 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->renderHook(
+                'panels::head.end',
+                fn() => '<meta http-equiv="Cache-Control" content="public, max-age=600">'
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);

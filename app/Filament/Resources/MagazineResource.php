@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProgramResource\Pages;
-use App\Models\Pages\Program;
+use App\Filament\Resources\MagazineResource\Pages;
+use App\Models\Pages\Magazine;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -11,12 +11,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProgramResource extends Resource
+class MagazineResource extends Resource
 {
-    protected static ?string $model = Program::class;
+    protected static ?string $model = Magazine::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Program';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationLabel = 'Majalah';
     protected static ?string $navigationGroup = 'Manajemen Konten';
 
     public static function form(Form $form): Form
@@ -27,14 +27,22 @@ class ProgramResource extends Resource
                 ->required()
                 ->maxLength(255),
 
-            Forms\Components\FileUpload::make('image')
+            Forms\Components\FileUpload::make('cover')
                 ->image()
-                ->directory('programs')
+                ->directory('magazines/covers')
                 ->disk('public')
                 ->imageResizeMode('cover')
-                ->imageResizeTargetWidth(800)
-                ->imageResizeTargetHeight(533)
+                ->imageResizeTargetWidth(600)
+                ->imageResizeTargetHeight(800)
                 ->required(),
+
+            Forms\Components\FileUpload::make('file')
+                ->label('File Majalah (PDF)')
+                ->acceptedFileTypes(['application/pdf'])
+                ->directory('magazines/files')
+                ->disk('public')
+                ->required()
+                ->maxSize(20480),
 
             Forms\Components\RichEditor::make('description')
                 ->required()
@@ -64,21 +72,26 @@ class ProgramResource extends Resource
         return $table
             ->modifyQueryUsing(
                 fn(Builder $query) =>
-                $query->select(['id', 'image', 'title', 'created_at'])
+                $query->select(['id', 'title', 'cover', 'file', 'created_at'])
             )
             ->defaultSort('created_at', 'desc')
             ->paginated([10])
             ->columns([
 
-                Tables\Columns\ImageColumn::make('image')
+                Tables\Columns\ImageColumn::make('cover')
                     ->disk('public')
-                    ->height(50)
-                    ->width(75),
+                    ->height(70)
+                    ->width(50),
 
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable()
-                    ->limit(50),
+                    ->limit(40),
+
+                Tables\Columns\TextColumn::make('file')
+                    ->label('PDF')
+                    ->url(fn($record) => asset('storage/' . $record->file))
+                    ->openUrlInNewTab(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d M Y')
@@ -93,9 +106,9 @@ class ProgramResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPrograms::route('/'),
-            'create' => Pages\CreateProgram::route('/create'),
-            'edit' => Pages\EditProgram::route('/{record}/edit'),
+            'index' => Pages\ListMagazines::route('/'),
+            'create' => Pages\CreateMagazine::route('/create'),
+            'edit' => Pages\EditMagazine::route('/{record}/edit'),
         ];
     }
 }

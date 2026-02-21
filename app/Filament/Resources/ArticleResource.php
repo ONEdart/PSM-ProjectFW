@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class ArticleResource extends Resource
 {
@@ -21,53 +22,63 @@ class ArticleResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
+        return $form->schema([
 
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(
-                        fn($state, callable $set) =>
-                        $set('slug', Str::slug($state))
-                    ),
+            Forms\Components\TextInput::make('title')
+                ->required()
+                ->lazy() // lebih ringan dari live
+                ->afterStateUpdated(
+                    fn($state, callable $set) =>
+                    $set('slug', Str::slug($state))
+                ),
 
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->unique(ignoreRecord: true),
+            Forms\Components\TextInput::make('slug')
+                ->required()
+                ->unique(ignoreRecord: true),
 
-                Forms\Components\FileUpload::make('thumbnail')
-                    ->image()
-                    ->imageEditor()
-                    ->imageResizeMode('cover')
-                    ->imageCropAspectRatio('1:1')
-                    ->imageResizeTargetWidth(600)
-                    ->imageResizeTargetHeight(600)
-                    ->directory('articles'),
+            Forms\Components\FileUpload::make('thumbnail')
+                ->image()
+                ->directory('articles')
+                ->disk('public')
+                ->imageResizeMode('cover')
+                ->imageResizeTargetWidth(600)
+                ->imageResizeTargetHeight(600),
 
-                Forms\Components\Textarea::make('excerpt')
-                    ->rows(3)
-                    ->maxLength(200)
-                    ->helperText('Kosongkan jika ingin otomatis dari content'),
+            Forms\Components\Textarea::make('excerpt')
+                ->rows(3)
+                ->maxLength(200),
 
-                Forms\Components\RichEditor::make('content')
-                    ->required()
-                    ->columnSpanFull(),
-
-            ]);
+            Forms\Components\RichEditor::make('content')
+                ->required()
+                ->columnSpanFull()
+                ->disableToolbarButtons([
+                    'attachFiles', // kurangi fitur berat
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->select(['id','title','thumbnail','created_at'])
+            )
+            ->defaultSort('created_at', 'desc')
+            ->paginated([10])
             ->columns([
                 Tables\Columns\ImageColumn::make('thumbnail')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->height(50)
+                    ->width(50),
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(50),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y'),
+                    ->dateTime('d M Y')
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
