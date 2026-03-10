@@ -6,7 +6,7 @@ node {
     }
 
 stage('Build Dependencies') {
-    docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8') {
+    docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8 --network jenkins') {
         sh '''
             apt-get update && apt-get install -y git unzip libicu-dev libzip-dev
             git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy
