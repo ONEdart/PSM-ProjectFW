@@ -59,22 +59,22 @@ node {
             cp /deploy/laravel/.env.example /deploy/laravel/.env
 
             echo "=== Generate application key ==="
-            docker exec -w /var/www/html laravel-target php artisan key:generate
+            docker exec laravel-target bash -c "cd /var/www/html && php artisan key:generate"
 
             echo "=== Mengatur koneksi database di .env ==="
-            docker exec -w /var/www/html laravel-target sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" /var/www/html/.env
-            docker exec -w /var/www/html laravel-target sed -i "s/DB_HOST=.*/DB_HOST=db/" /var/www/html/.env
-            docker exec -w /var/www/html laravel-target sed -i "s/DB_DATABASE=.*/DB_DATABASE=laravel/" /var/www/html/.env
-            docker exec -w /var/www/html laravel-target sed -i "s/DB_USERNAME=.*/DB_USERNAME=laravel_user/" /var/www/html/.env
-            docker exec -w /var/www/html laravel-target sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=secret/" /var/www/html/.env
+            docker exec laravel-target sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" /var/www/html/.env
+            docker exec laravel-target sed -i "s/DB_HOST=.*/DB_HOST=db/" /var/www/html/.env
+            docker exec laravel-target sed -i "s/DB_DATABASE=.*/DB_DATABASE=laravel/" /var/www/html/.env
+            docker exec laravel-target sed -i "s/DB_USERNAME=.*/DB_USERNAME=laravel_user/" /var/www/html/.env
+            docker exec laravel-target sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=secret/" /var/www/html/.env
 
             echo "=== Menjalankan migrasi database ==="
-            docker exec -w /var/www/html laravel-target php artisan migrate --force
+            docker exec laravel-target bash -c "cd /var/www/html && php artisan migrate --force"
 
             echo "=== Mengoptimalkan cache (config, route, view) ==="
-            docker exec -w /var/www/html laravel-target php artisan config:cache
-            docker exec -w /var/www/html laravel-target php artisan route:cache
-            docker exec -w /var/www/html laravel-target php artisan view:cache
+            docker exec laravel-target bash -c "cd /var/www/html && php artisan config:cache"
+            docker exec laravel-target bash -c "cd /var/www/html && php artisan route:cache"
+            docker exec laravel-target bash -c "cd /var/www/html && php artisan view:cache"
 
             echo "✅ Setup environment selesai"
         '''
