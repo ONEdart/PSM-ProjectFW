@@ -43,8 +43,10 @@ pipeline {
 
         stage('Test') {
             steps {
-                docker.image('ubuntu:22.04').inside('-u root') {
-                    sh 'echo "Pipeline testing success!"'
+                script {
+                    docker.image('ubuntu:22.04').inside('-u root') {
+                        sh 'echo "Pipeline testing success!"'
+                    }
                 }
             }
         }
