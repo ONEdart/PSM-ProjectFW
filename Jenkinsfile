@@ -5,23 +5,25 @@ node {
         sh 'ls -la'
     }
 
-    stage('Build Dependencies') {
-        // Gunakan image PHP resmi dengan CLI, install composer dan ekstensi intl
-        docker.image('php:8.1-cli').inside('-u root') {
-            // Install dependency system, git, unzip, dan ekstensi intl
-            sh 'apt-get update && apt-get install -y git unzip libicu-dev'
-            sh 'docker-php-ext-install intl'
-
-            // Install composer
-            sh 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-
-            // Hapus composer.lock untuk menghindari konflik versi
-            sh 'rm -f composer.lock'
-
-            // Install dependensi tanpa dev
-            sh 'composer install --no-dev --optimize-autoloader'
-        }
+stage('Build Dependencies') {
+    docker.image('php:8.2-cli').inside('-u root') {
+        // Atasi dubious ownership warning
+        sh 'git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy'
+        
+        // Install dependency system dan ekstensi PHP yang diperlukan
+        sh 'apt-get update && apt-get install -y git unzip libicu-dev libzip-dev'
+        sh 'docker-php-ext-install intl zip'
+        
+        // Install composer
+        sh 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
+        
+        // Hapus composer.lock untuk menghindari konflik versi
+        sh 'rm -f composer.lock'
+        
+        // Install dependensi tanpa dev
+        sh 'composer install --no-dev --optimize-autoloader'
     }
+}
 
     stage('Deploy to Local Container') {
         sh 'rm -rf /deploy/laravel/* || true'
