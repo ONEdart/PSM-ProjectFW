@@ -5,16 +5,18 @@ node {
         sh 'ls -la'
     }
 
-    stage('Build Dependencies') {
-        docker.image('php:8.2-cli').inside('-u root') {
-            sh 'git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy'
-            sh 'apt-get update && apt-get install -y git unzip libicu-dev libzip-dev'
-            sh 'docker-php-ext-install intl zip'
-            sh 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-            sh 'rm -f composer.lock'
-            sh 'composer install --no-dev --optimize-autoloader'
-        }
+stage('Build Dependencies') {
+    docker.image('php:8.2-cli').inside('-u root') {
+        sh '''
+            apt-get update && apt-get install -y git unzip libicu-dev libzip-dev
+            git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy
+            docker-php-ext-install intl zip
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+            rm -f composer.lock
+            composer install --no-dev --optimize-autoloader
+        '''
     }
+}
 
     stage('Deploy to Local Container') {
         sh 'rm -rf /deploy/laravel/* || true'
