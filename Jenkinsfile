@@ -6,8 +6,13 @@ node {
     }
 
 stage('Build Dependencies') {
-    docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8 --network jenkins') {
+    docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8') {
         sh '''
+            echo "=== Tes Koneksi ke deb.debian.org ==="
+            ping -c 2 deb.debian.org || true
+            curl -v http://deb.debian.org || true
+            echo "======================================"
+            
             apt-get update && apt-get install -y git unzip libicu-dev libzip-dev
             git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy
             docker-php-ext-install intl zip
