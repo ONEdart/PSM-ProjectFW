@@ -23,12 +23,15 @@ stage('Build Dependencies') {
     }
 }
 
-    stage('Deploy to Local Container') {
-        sh 'rm -rf /deploy/laravel/* || true'
-        sh 'mkdir -p /deploy/laravel'
-        sh 'cp -r . /deploy/laravel/'
-        sh 'chmod -R 777 /deploy/laravel/storage /deploy/laravel/bootstrap/cache || true'
-    }
+stage('Deploy to Local Container') {
+    sh '''
+        # Hapus seluruh folder target (termasuk .git)
+        rm -rf /deploy/laravel
+        mkdir -p /deploy/laravel
+        cp -r . /deploy/laravel/
+        chmod -R 777 /deploy/laravel/storage /deploy/laravel/bootstrap/cache || true
+    '''
+}
 
     stage('Setup Environment') {
         sh 'cp /deploy/laravel/.env.example /deploy/laravel/.env'
