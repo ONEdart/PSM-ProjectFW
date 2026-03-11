@@ -9,17 +9,42 @@ node {
         docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8') {
             sh '''
                 set -e
-                echo "=== Update package list ==="
-                apt-get update -qq
-                echo "=== Install git, unzip, libicu-dev, libzip-dev ==="
-                apt-get install -y -qq git unzip libicu-dev libzip-dev
+                # Fungsi untuk mencoba perintah dengan retry
+                retry() {
+                    local n=0
+                    local max=3
+                    local delay=5
+                    while true; do
+                        "$@" && break || {
+                            if [[ $n -lt $max ]]; then
+                                ((n++))
+                                echo "Perintah gagal, mencoba lagi dalam $delay detik (percobaan $n/$max)..."
+                                sleep $delay
+                            else
+                                echo "Perintah gagal setelah $max percobaan."
+                                return 1
+                            fi
+                        }
+                    done
+                }
+
+                echo "=== Update package list (dengan retry) ==="
+                retry apt-get update -qq
+
+                echo "=== Install git, unzip, libicu-dev, libzip-dev (dengan retry) ==="
+                retry apt-get install -y -qq git unzip libicu-dev libzip-dev --fix-missing
+
                 git config --global --add safe.directory /var/jenkins_home/workspace/laravel-deploy
+
                 echo "=== Install PHP extensions intl & zip ==="
                 docker-php-ext-install -j$(nproc) intl zip
+
                 echo "=== Install Composer ==="
                 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
                 echo "=== Remove composer.lock (if exists) ==="
                 rm -f composer.lock
+
                 echo "=== Run composer install ==="
                 composer install --no-dev --optimize-autoloader
             '''
