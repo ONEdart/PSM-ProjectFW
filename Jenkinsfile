@@ -9,7 +9,7 @@ node {
         docker.image('php:8.2-cli').inside('-u root --dns 8.8.8.8') {
             sh '''
                 set -e
-                # Fungsi untuk mencoba perintah dengan retry
+                # Fungsi retry untuk mengatasi koneksi internet yang tidak stabil
                 retry() {
                     local n=0
                     local max=3
@@ -87,11 +87,11 @@ node {
             docker exec laravel-target bash -c "cd /var/www/html && php artisan key:generate"
 
             echo "=== Mengatur koneksi database di .env ==="
-            docker exec laravel-target sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" /var/www/html/.env
-            docker exec laravel-target sed -i "s/DB_HOST=.*/DB_HOST=db/" /var/www/html/.env
-            docker exec laravel-target sed -i "s/DB_DATABASE=.*/DB_DATABASE=laravel/" /var/www/html/.env
-            docker exec laravel-target sed -i "s/DB_USERNAME=.*/DB_USERNAME=laravel_user/" /var/www/html/.env
-            docker exec laravel-target sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=secret/" /var/www/html/.env
+            docker exec laravel-target bash -c "cd /var/www/html && sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env"
+            docker exec laravel-target bash -c "cd /var/www/html && sed -i 's/DB_HOST=.*/DB_HOST=db/' .env"
+            docker exec laravel-target bash -c "cd /var/www/html && sed -i 's/DB_DATABASE=.*/DB_DATABASE=laravel/' .env"
+            docker exec laravel-target bash -c "cd /var/www/html && sed -i 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' .env"
+            docker exec laravel-target bash -c "cd /var/www/html && sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=secret/' .env"
 
             echo "=== Menjalankan migrasi database ==="
             docker exec laravel-target bash -c "cd /var/www/html && php artisan migrate --force"
