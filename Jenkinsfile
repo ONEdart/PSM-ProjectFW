@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.image('composer:2.7.1').inside('-u root -v .:/app') {
+                    docker.image('composer:2').inside('-u root -v .:/app') {
                         sh 'composer install --no-dev --optimize-autoloader'
                     }
                 }
