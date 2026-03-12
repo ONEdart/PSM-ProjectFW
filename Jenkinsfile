@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PROD_HOST = 'localhost'   // karena host sama, bisa pakai localhost
+        PROD_HOST = 'localhost'
         PROD_USER = 'pakelcomedy'
         DEPLOY_PATH = '/var/www/html/psm-projectfw'
         REPO_URL = 'https://github.com/ONEdart/PSM-ProjectFW'
@@ -16,17 +16,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    docker.image('composer:2').inside('-u root -v .:/app') {
-                        sh 'composer install --no-dev --optimize-autoloader'
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Server') {
+        stage('Deploy Files') {
             steps {
                 sshagent(credentials: ['ssh-prod']) {
                     sh """
@@ -35,6 +25,28 @@ pipeline {
                             --exclude=.env \
                             --exclude=.git \
                             --exclude=storage
+                    """
+                }
+            }
+        }
+
+        stage('Build on Server') {
+            steps {
+                sshagent(credentials: ['ssh-prod']) {
+                    sh """
+                        ssh ${PROD_USER}@${PROD_HOST} "
+                            cd ${DEPLOY_PATH} && \
+                            composer install --no-dev --optimize-autoloader
+                        "
+                    """
+                }
+            }
+        }
+
+        stage('Post-Deploy Setup') {
+            steps {
+                sshagent(credentials: ['ssh-prod']) {
+                    sh """
                         ssh ${PROD_USER}@${PROD_HOST} "
                             cd ${DEPLOY_PATH} && \
                             cp -n .env.example .env && \
